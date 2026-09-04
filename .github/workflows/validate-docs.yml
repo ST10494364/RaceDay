@@ -1,0 +1,33 @@
+name: Validate Docs Folder
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check /docs folder exists
+        run: |
+          if [ ! -d "docs" ]; then
+            echo "ERROR: /docs folder is missing."
+            exit 1
+          fi
+          echo "/docs folder found."
+
+      - name: Check required files exist
+        run: |
+          FILES=("docs/FINAL_ERD.drawio.png" "docs/API_Endpoint_Plan.md" "docs/RaceDay_Schema.sql")
+          for FILE in "${FILES[@]}"; do
+            if [ ! -f "$FILE" ]; then
+              echo "ERROR: Missing required file: $FILE"
+              exit 1
+            fi
+            echo "Found: $FILE"
+          done
