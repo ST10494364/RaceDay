@@ -50,5 +50,16 @@ A GitHub Actions workflow (`.github/workflows/validate-docs.yml`) runs automatic
 An unlisted YouTube video walking through the ERD design decisions, the API endpoint plan, and a live run of the SQL script in SSMS:
 
 https://youtu.be/Kuv1IgIDm4U
+
+## AI Assistance Disclosure
+
+AI assistance (Claude, by Anthropic) was used throughout the planning stage of this project. Specifically, it was used to:
+
+- Explain unfamiliar concepts (e.g. 401 vs 403 HTTP status codes, SQL Server reserved words)
+- Talk through and validate design decisions for the ERD (entity choices, relationship cardinality) and the API endpoint plan, based on the functional requirements in the brief
+- Help troubleshoot GitHub repository setup, folder structure issues, and the GitHub Actions CI/CD workflow
+- Draft an initial version of the SQL script structure, which was then reviewed, tested, and run personally in SSMS against a clean instance to confirm it works correctly
+
+All final design decisions, the analysis of trade-offs (e.g. single User table vs separate Organiser/Participant tables), testing, and verification were done by me. I can explain and defend every choice made in this submission.
 ---
 © 2026 — PROG6212 Portfolio of Evidence, Part 1
