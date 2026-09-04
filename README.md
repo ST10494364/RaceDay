@@ -23,6 +23,8 @@ The system supports two distinct user roles:
 - RaceDay_Schema.sql — SQL script (schema + seed data)
 - ci-success.png — CI/CD successful build screenshot
 
+ The database design follows a normalised structure: a single `User` table (distinguishing Organisers and Participants via a `role` field) connects to `Event`, which in turn connects to `Category`, `Enrolment`, and `Result` — with `Enrolment` linking Participants, Events, and Categories together. 
+
 /.github/workflows → CI/CD configuration
 - validate-docs.yml — Validates /docs folder structure
 
@@ -61,5 +63,8 @@ AI assistance (Claude, by Anthropic) was used throughout the planning stage of t
 - Draft an initial version of the SQL script structure, which was then reviewed, tested, and run personally in SSMS against a clean instance to confirm it works correctly
 
 All final design decisions, the analysis of trade-offs (e.g. single User table vs separate Organiser/Participant tables), testing, and verification were done by me. I can explain and defend every choice made in this submission.
+
+
+
 ---
 © 2026 — PROG6212 Portfolio of Evidence, Part 1
