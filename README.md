@@ -49,7 +49,6 @@ A GitHub Actions workflow (`.github/workflows/validate-docs.yml`) runs automatic
 
 An unlisted YouTube video walking through the ERD design decisions, the API endpoint plan, and a live run of the SQL script in SSMS:
 
-**[Video link — to be added]**
-
+https://youtu.be/Kuv1IgIDm4U
 ---
 © 2026 — PROG6212 Portfolio of Evidence, Part 1
