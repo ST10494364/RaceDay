@@ -427,3 +427,21 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+
+# Visual Studio / C# build artifacts (added ahead of Part 2)
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+.vs/
+*.user
+*.suo
+*.sln.docstates
+
+# Build results and logs
+[Bb]uild[Ll]og.*
+*.log
+
+# Test results
+[Tt]est[Rr]esult*/
