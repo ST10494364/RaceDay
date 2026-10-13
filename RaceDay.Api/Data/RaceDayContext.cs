@@ -32,6 +32,13 @@ namespace RaceDay.Api.Data
                 .Property(e => e.EventDate)
                 .HasColumnType("date");
 
+            //seed the three event types, matching the Part 1 SQL script
+            modelBuilder.Entity<EventType>().HasData(
+                new EventType { EventTypeId = 1, TypeName = "Run" },
+                new EventType { EventTypeId = 2, TypeName = "Walk" },
+                new EventType { EventTypeId = 3, TypeName = "Cycle" }
+            );
+
             //no cascade deletes, matching the SQL script and avoiding SQL Server multiple cascade path errors
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {//start of foreach

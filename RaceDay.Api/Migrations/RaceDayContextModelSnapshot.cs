@@ -166,6 +166,23 @@ namespace RaceDay.Api.Migrations
                     b.HasKey("EventTypeId");
 
                     b.ToTable("EventType");
+
+                    b.HasData(
+                        new
+                        {
+                            EventTypeId = 1,
+                            TypeName = "Run"
+                        },
+                        new
+                        {
+                            EventTypeId = 2,
+                            TypeName = "Walk"
+                        },
+                        new
+                        {
+                            EventTypeId = 3,
+                            TypeName = "Cycle"
+                        });
                 });
 
             modelBuilder.Entity("RaceDay.Api.Models.Result", b =>
