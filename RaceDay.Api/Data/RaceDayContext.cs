@@ -27,6 +27,11 @@ namespace RaceDay.Api.Data
                 .HasIndex(u => u.Email)
                 .IsUnique();
 
+            //event date is a date only (no time), matching the Part 1 SQL script
+            modelBuilder.Entity<Event>()
+                .Property(e => e.EventDate)
+                .HasColumnType("date");
+
             //no cascade deletes, matching the SQL script and avoiding SQL Server multiple cascade path errors
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {//start of foreach
@@ -36,6 +41,16 @@ namespace RaceDay.Api.Data
             base.OnModelCreating(modelBuilder);
 
         }//end of OnModelCreating
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+        {//start of ConfigureConventions
+
+            //use varchar instead of nvarchar, matching the Part 1 SQL script
+            configurationBuilder.Properties<string>().AreUnicode(false);
+
+            //use datetime instead of datetime2, matching the Part 1 SQL script
+            configurationBuilder.Properties<DateTime>().HaveColumnType("datetime");
+
+        }//end of ConfigureConventions
 
     }//end of class
 }//end of namespace
