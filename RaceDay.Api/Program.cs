@@ -1,4 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using RaceDay.Api.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+//register the database context using the connection string from appsettings.json
+builder.Services.AddDbContext<RaceDayContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 
