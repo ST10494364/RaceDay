@@ -65,6 +65,16 @@ AI assistance (Claude, by Anthropic) was used throughout the planning stage of t
 All final design decisions, the analysis of trade-offs (e.g. single User table vs separate Organiser/Participant tables), testing, and verification were done by me. I can explain and defend every choice made in this submission.
 
 
+### Part 2
+
+AI assistance (Claude, by Anthropic) was used in Part 2 for step-by-step guidance and for help with code, including the model classes and the DbContext. I reviewed the code I submitted and I can explain it.
+
+## Part 2: Deviations from the Part 1 Plan
+
+- **Login:** my Part 1 plan said `/api/auth/login` returns an access token. Part 2 requires session-based authentication, so login now creates a server-side session that stores the user ID and role instead.
+- **Added endpoint:** `GET /api/enrolments/me` lets a Participant view their own enrolments. The Roles section of the brief requires this, but it was missing from my Part 1 plan.
+- **Endpoint count:** my Part 1 text says 14 endpoints, but the table lists 15. With the added endpoint, the API has 16.
+
 
 ---
 © 2026 — PROG6212 Portfolio of Evidence, Part 1
