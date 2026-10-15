@@ -129,6 +129,38 @@ namespace RaceDay.Api.Controllers
 
         }//end of GetEnrolments
 
+        /// <summary>
+        /// Returns the logged-in Participant's own enrolments across all events. Participant only.
+        /// </summary>
+        [HttpGet("~/api/enrolments/me")]
+        [ProducesResponseType(typeof(List<EnrolmentResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetMyEnrolments()
+        {//start of GetMyEnrolments
+
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {//start of not logged in check
+                return Unauthorized(new { message = "You must be logged in." });
+            }//end of not logged in check
+
+            if (HttpContext.Session.GetString("Role") != "Participant")
+            {//start of role check
+                return StatusCode(StatusCodes.Status403Forbidden, new { message = "Only Participants have personal enrolments." });
+            }//end of role check
+
+            var enrolments = await _context.Enrolments
+                .Include(en => en.Participant)
+                .Include(en => en.Category)
+                .Where(en => en.ParticipantId == userId.Value)
+                .OrderBy(en => en.EnrolmentDate)
+                .ToListAsync();
+
+            return Ok(enrolments.Select(ToResponse).ToList());
+
+        }//end of GetMyEnrolments
+
         //converts an Enrolment into the response shape
         private static EnrolmentResponse ToResponse(Enrolment en)
         {//start of ToResponse
