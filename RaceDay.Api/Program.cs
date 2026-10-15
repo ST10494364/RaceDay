@@ -20,7 +20,14 @@ builder.Services.AddSession(options =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{//start of swagger options
+
+    //include the XML comments (/// summaries) so each endpoint's purpose, input and responses show in Swagger
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFile));
+
+});//end of swagger options
 
 var app = builder.Build();
 
