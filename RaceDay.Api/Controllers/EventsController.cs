@@ -123,6 +123,107 @@ namespace RaceDay.Api.Controllers
         }//end of GetEventById
 
         //converts an Event into the response shape
+
+        /// <summary>
+        /// Updates an existing event. Organiser only, and only the Organiser who owns the event.
+        /// </summary>
+        /// <remarks>Body: name, description, event_date, location, distance_km, event_type_id, status (Open, Closed, Completed or Cancelled).</remarks>
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(EventResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateEvent(int id, UpdateEventRequest request)
+        {//start of UpdateEvent
+
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {//start of not logged in check
+                return Unauthorized(new { message = "You must be logged in." });
+            }//end of not logged in check
+
+            if (HttpContext.Session.GetString("Role") != "Organiser")
+            {//start of role check
+                return StatusCode(StatusCodes.Status403Forbidden, new { message = "Only Organisers can update events." });
+            }//end of role check
+
+            var foundEvent = await _context.Events.FirstOrDefaultAsync(e => e.EventId == id);
+            if (foundEvent == null)
+            {//start of not found check
+                return NotFound(new { message = "Event not found." });
+            }//end of not found check
+
+            //403 if this Organiser does not own the event
+            if (foundEvent.OrganiserId != userId.Value)
+            {//start of ownership check
+                return StatusCode(StatusCodes.Status403Forbidden, new { message = "You can only update your own events." });
+            }//end of ownership check
+
+            var eventType = await _context.EventTypes.FindAsync(request.EventTypeId);
+            if (eventType == null)
+            {//start of event type check
+                return BadRequest(new { message = "Event type does not exist." });
+            }//end of event type check
+
+            foundEvent.Name = request.Name.Trim();
+            foundEvent.Description = request.Description.Trim();
+            foundEvent.EventDate = request.EventDate.Date;
+            foundEvent.Location = request.Location.Trim();
+            foundEvent.DistanceKm = request.DistanceKm;
+            foundEvent.EventTypeId = request.EventTypeId;
+            foundEvent.Status = request.Status;
+            await _context.SaveChangesAsync();
+
+            foundEvent.EventType = eventType;
+            return Ok(ToResponse(foundEvent));
+
+        }//end of UpdateEvent
+
+        /// <summary>
+        /// Deletes an event together with its categories, enrolments and results. Organiser only, and only the Organiser who owns the event.
+        /// </summary>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteEvent(int id)
+        {//start of DeleteEvent
+
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {//start of not logged in check
+                return Unauthorized(new { message = "You must be logged in." });
+            }//end of not logged in check
+
+            if (HttpContext.Session.GetString("Role") != "Organiser")
+            {//start of role check
+                return StatusCode(StatusCodes.Status403Forbidden, new { message = "Only Organisers can delete events." });
+            }//end of role check
+
+            var foundEvent = await _context.Events.FirstOrDefaultAsync(e => e.EventId == id);
+            if (foundEvent == null)
+            {//start of not found check
+                return NotFound(new { message = "Event not found." });
+            }//end of not found check
+
+            if (foundEvent.OrganiserId != userId.Value)
+            {//start of ownership check
+                return StatusCode(StatusCodes.Status403Forbidden, new { message = "You can only delete your own events." });
+            }//end of ownership check
+
+            //the database does not cascade deletes, so remove the child rows first
+            //EF Core saves these deletes together in one transaction
+            _context.Results.RemoveRange(_context.Results.Where(r => r.EventId == id));
+            _context.Enrolments.RemoveRange(_context.Enrolments.Where(en => en.EventId == id));
+            _context.Categories.RemoveRange(_context.Categories.Where(c => c.EventId == id));
+            _context.Events.Remove(foundEvent);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+
+        }//end of DeleteEvent
         private static EventResponse ToResponse(Event e)
         {//start of ToResponse
             return new EventResponse
