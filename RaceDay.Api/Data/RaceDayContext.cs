@@ -39,6 +39,19 @@ namespace RaceDay.Api.Data
                 new EventType { EventTypeId = 3, TypeName = "Cycle" }
             );
 
+            //database-level defaults, matching the DEFAULT constraints in the Part 1 SQL script
+            modelBuilder.Entity<User>()
+                .Property(u => u.CreatedAt)
+                .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<Enrolment>()
+                .Property(en => en.EnrolmentDate)
+                .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<Event>()
+                .Property(e => e.Status)
+                .HasDefaultValue("Open");
+
             //no cascade deletes, matching the SQL script and avoiding SQL Server multiple cascade path errors
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {//start of foreach

@@ -63,8 +63,10 @@ namespace RaceDay.Api.Migrations
                         .HasColumnName("category_id");
 
                     b.Property<DateTime>("EnrolmentDate")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
-                        .HasColumnName("enrolment_date");
+                        .HasColumnName("enrolment_date")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<int>("EventId")
                         .HasColumnType("int")
@@ -133,9 +135,11 @@ namespace RaceDay.Api.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(20)
                         .IsUnicode(false)
                         .HasColumnType("varchar(20)")
+                        .HasDefaultValue("Open")
                         .HasColumnName("status");
 
                     b.HasKey("EventId");
@@ -229,8 +233,10 @@ namespace RaceDay.Api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Email")
                         .IsRequired()
