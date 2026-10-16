@@ -120,7 +120,7 @@ The workflow `.github/workflows/ci.yml` runs on every push to `main`. It validat
 
 An unlisted YouTube video walking through the API, authentication and roles, Swagger and the unit tests:
 
-VIDEO_LINK_HERE
+[VIDEO_LINK_HERE](https://youtu.be/GvpZ-HZzEzM)
 
 ### Part 2: Deviations from the Part 1 Plan
 
