@@ -37,5 +37,10 @@ namespace RaceDay.Api.Models
         [Column("enrolment_date")]
         public DateTime EnrolmentDate { get; set; } = DateTime.Now;
 
+        //Pending when the Participant first enrols, Confirmed once the Organiser approves it
+        [Required, MaxLength(20)]
+        [Column("status")]
+        public string Status { get; set; } = "Pending";
+
     }//end of class
 }//end of namespace

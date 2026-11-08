@@ -52,6 +52,11 @@ namespace RaceDay.Api.Data
                 .Property(e => e.Status)
                 .HasDefaultValue("Open");
 
+            //new enrolments start as Pending until the Organiser confirms them
+            modelBuilder.Entity<Enrolment>()
+                .Property(en => en.Status)
+                .HasDefaultValue("Pending");
+
             //no cascade deletes, matching the SQL script and avoiding SQL Server multiple cascade path errors
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {//start of foreach

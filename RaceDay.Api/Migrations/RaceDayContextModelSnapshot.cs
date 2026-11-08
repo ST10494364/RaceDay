@@ -76,6 +76,15 @@ namespace RaceDay.Api.Migrations
                         .HasColumnType("int")
                         .HasColumnName("participant_id");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)")
+                        .HasDefaultValue("Pending")
+                        .HasColumnName("status");
+
                     b.HasKey("EnrolmentId");
 
                     b.HasIndex("CategoryId");
