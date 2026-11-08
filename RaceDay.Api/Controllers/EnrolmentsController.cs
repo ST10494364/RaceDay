@@ -172,7 +172,9 @@ namespace RaceDay.Api.Controllers
                 EventId = en.EventId,
                 CategoryId = en.CategoryId,
                 CategoryName = en.Category?.CategoryName ?? string.Empty,
-                EnrolmentDate = en.EnrolmentDate
+                EnrolmentDate = en.EnrolmentDate,
+                Status = en.Status
+
             };//end of response object
         }//end of ToResponse
 

@@ -28,5 +28,9 @@ namespace RaceDay.Api.Dtos
         [JsonPropertyName("enrolment_date")]
         public DateTime EnrolmentDate { get; set; }
 
+        //Pending or Confirmed, so the front end can colour-code it
+        [JsonPropertyName("status")]
+        public string Status { get; set; } = string.Empty;
+
     }//end of class
 }//end of namespace
