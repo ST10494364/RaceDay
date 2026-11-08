@@ -38,5 +38,10 @@ namespace RaceDay.Api.Models
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
+        //web address of the profile picture stored in Azure Blob Storage (empty until the user uploads one)
+        [MaxLength(500)]
+        [Column("profile_picture_url")]
+        public string? ProfilePictureUrl { get; set; }
+
     }//end of class
 }//end of namespace

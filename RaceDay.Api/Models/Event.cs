@@ -49,5 +49,10 @@ namespace RaceDay.Api.Models
         [Column("status")]
         public string Status { get; set; } = "Open";
 
+        //web address of the banner image stored in Azure Blob Storage (empty until an Organiser uploads one)
+        [MaxLength(500)]
+        [Column("banner_image_url")]
+        public string? BannerImageUrl { get; set; }
+
     }//end of class
 }//end of namespace
