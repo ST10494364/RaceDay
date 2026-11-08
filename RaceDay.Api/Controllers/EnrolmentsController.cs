@@ -161,6 +161,64 @@ namespace RaceDay.Api.Controllers
 
         }//end of GetMyEnrolments
 
+
+        /// <summary>
+        /// Confirms a Pending enrolment. Organiser only, and only the Organiser who owns the event.
+        /// </summary>
+        [HttpPut("{enrolmentId}/confirm")]
+        [ProducesResponseType(typeof(EnrolmentResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> ConfirmEnrolment(int eventId, int enrolmentId)
+        {//start of ConfirmEnrolment
+
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {//start of not logged in check
+                return Unauthorized(new { message = "You must be logged in." });
+            }//end of not logged in check
+
+            if (HttpContext.Session.GetString("Role") != "Organiser")
+            {//start of role check
+                return StatusCode(StatusCodes.Status403Forbidden, new { message = "Only Organisers can confirm enrolments." });
+            }//end of role check
+
+            var foundEvent = await _context.Events.FirstOrDefaultAsync(e => e.EventId == eventId);
+            if (foundEvent == null)
+            {//start of event not found check
+                return NotFound(new { message = "Event not found." });
+            }//end of event not found check
+
+            //403 if this Organiser does not own the event
+            if (foundEvent.OrganiserId != userId.Value)
+            {//start of ownership check
+                return StatusCode(StatusCodes.Status403Forbidden, new { message = "You can only confirm enrolments for your own events." });
+            }//end of ownership check
+
+            //the enrolment must belong to this event
+            var enrolment = await _context.Enrolments
+                .Include(en => en.Participant)
+                .Include(en => en.Category)
+                .FirstOrDefaultAsync(en => en.EnrolmentId == enrolmentId && en.EventId == eventId);
+            if (enrolment == null)
+            {//start of enrolment not found check
+                return NotFound(new { message = "Enrolment not found for this event." });
+            }//end of enrolment not found check
+
+            //409 if it has already been confirmed
+            if (enrolment.Status == "Confirmed")
+            {//start of already confirmed check
+                return Conflict(new { message = "This enrolment is already confirmed." });
+            }//end of already confirmed check
+
+            enrolment.Status = "Confirmed";
+            await _context.SaveChangesAsync();
+
+            return Ok(ToResponse(enrolment));
+
+        }//end of ConfirmEnrolment
         //converts an Enrolment into the response shape
         private static EnrolmentResponse ToResponse(Enrolment en)
         {//start of ToResponse
