@@ -120,8 +120,32 @@ namespace RaceDay.Api.Controllers
                 .OrderBy(r => r.Event!.EventDate)
                 .ToListAsync();
 
-            return Ok(results.Select(ToResponse).ToList());
+            //ids of the events these results belong to
+            var eventIds = results.Select(r => r.EventId).Distinct().ToList();
 
+            //how many Participants finished each of those events
+            var finisherCounts = await _context.Results
+                .Where(r => eventIds.Contains(r.EventId))
+                .GroupBy(r => r.EventId)
+                .Select(g => new { EventId = g.Key, Total = g.Count() })
+                .ToDictionaryAsync(g => g.EventId, g => g.Total);
+
+            //the category this Participant entered each event in
+            var categoryNames = await _context.Enrolments
+                .Include(en => en.Category)
+                .Where(en => en.ParticipantId == userId.Value && eventIds.Contains(en.EventId))
+                .ToDictionaryAsync(en => en.EventId, en => en.Category!.CategoryName);
+
+            //build each response and add the finisher total and category name
+            var response = results.Select(r =>
+            {//start of response builder
+                var item = ToResponse(r);
+                item.TotalFinishers = finisherCounts.GetValueOrDefault(r.EventId);
+                item.CategoryName = categoryNames.GetValueOrDefault(r.EventId, string.Empty);
+                return item;
+            }).ToList();//end of response builder
+
+            return Ok(response);
         }//end of GetMyResults
 
         //converts a Result into the response shape
@@ -133,6 +157,7 @@ namespace RaceDay.Api.Controllers
                 ParticipantId = r.ParticipantId,
                 EventId = r.EventId,
                 EventName = r.Event?.Name ?? string.Empty,
+                EventDate = r.Event?.EventDate ?? default,
                 FinishTime = r.FinishTime,
                 FinishingPosition = r.FinishingPosition
             };//end of response object
