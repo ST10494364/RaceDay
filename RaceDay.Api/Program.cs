@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RaceDay.Api.Data;
+using RaceDay.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 //register the database context using the connection string from appsettings.json
@@ -14,6 +15,9 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });//end of session options
+
+//register the Blob Storage service so controllers can use it for image uploads
+builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
 
 // Add services to the container.
 
