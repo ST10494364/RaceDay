@@ -2,10 +2,9 @@ name: CI - Build and Test
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, part-3-mvc ]
   pull_request:
-    branches: [ main ]
-
+    branches: [ main, part-3-mvc ]
 jobs:
   build-and-test:
     runs-on: ubuntu-24.04
