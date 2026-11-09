@@ -19,9 +19,19 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddHttpContextAccessor();
 
-//one shared client for talking to the API; ApiClient handles the login cookie itself, so the built-in cookie handling is switched off
 builder.Services.AddHttpClient<ApiClient>()
-    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { UseCookies = false });
+    .ConfigurePrimaryHttpMessageHandler(() =>
+    {//start of handler setup
+        var handler = new HttpClientHandler { UseCookies = false };
+
+        //only used when running in Docker on a development machine, because the container does not trust the API's local development certificate
+        if (builder.Configuration["ApiSettings:AllowUntrustedCertificate"] == "true")
+        {//start of certificate check
+            handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+        }//end of certificate check
+
+        return handler;
+    });//end of handler setup
 
 var app = builder.Build();
 
