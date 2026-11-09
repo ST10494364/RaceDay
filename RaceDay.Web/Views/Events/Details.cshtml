@@ -1,0 +1,85 @@
+﻿@model RaceDay.Web.Models.EventDetailsViewModel
+@{
+    ViewData["Title"] = Model.Event.Name;
+    string? role = Context.Session.GetString("Role");
+}
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary btn-sm mb-3">&larr; Back to events</a>
+
+@if (!string.IsNullOrEmpty(Model.Event.BannerImageUrl))
+{
+    <img class="event-banner-large mb-4 shadow-sm" src="@Url.Action("EventBanner", "Images", new { id = Model.Event.EventId })" alt="Banner for @Model.Event.Name" />
+}
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h1 class="mb-2">@Model.Event.Name</h1>
+                    <span class="status-badge @(Model.Event.Status == "Open" ? "status-open" : "status-closed")">@Model.Event.Status</span>
+                </div>
+                <p class="text-muted">@Model.Event.EventTypeName &middot; @Model.Event.DistanceKm km</p>
+                <p>@Model.Event.Description</p>
+                <hr />
+                <p class="mb-1"><strong>Date:</strong> @Model.Event.EventDate.ToString("dddd, dd MMMM yyyy")</p>
+                <p class="mb-0"><strong>Location:</strong> @Model.Event.Location</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-header">Categories</div>
+            <div class="card-body">
+                @if (!Model.Categories.Any())
+                {
+                    <p class="text-muted mb-0">No categories have been added to this event yet.</p>
+                }
+                else
+                {
+                    <ul class="mb-0">
+                        @foreach (var c in Model.Categories)
+                        {
+                            <li>@c.CategoryName</li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+
+        @if (role == "Participant")
+        {
+            <div class="card shadow-sm mt-3">
+                <div class="card-header">Enter this event</div>
+                <div class="card-body">
+                    @if (Model.MyEnrolment != null)
+                    {
+                        <p class="mb-2">You are entered in <strong>@Model.MyEnrolment.CategoryName</strong>.</p>
+                        <span class="status-badge status-@Model.MyEnrolment.Status.ToLower()">@Model.MyEnrolment.Status</span>
+                    }
+                    else if (!Model.Categories.Any())
+                    {
+                        <p class="text-muted mb-0">You can enter once the Organiser adds a category.</p>
+                    }
+                    else
+                    {
+                        <form asp-action="Enrol" asp-route-id="@Model.Event.EventId" method="post">
+                            <div class="mb-3">
+                                <label class="form-label" for="categoryId">Choose a category</label>
+                                <select class="form-select" id="categoryId" name="categoryId">
+                                    <option value="0">Choose one...</option>
+                                    @foreach (var c in Model.Categories)
+                                    {
+                                        <option value="@c.CategoryId">@c.CategoryName</option>
+                                    }
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Enter Event</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
