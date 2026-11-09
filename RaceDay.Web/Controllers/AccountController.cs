@@ -100,7 +100,12 @@ namespace RaceDay.Web.Controllers
             HttpContext.Session.SetString("Role", result.Data.Role);
             HttpContext.Session.SetString("FullName", result.Data.FullName);
 
-            //for now everyone lands on the home page; each role gets its own landing page later
+            //Organisers land on their dashboard, Participants on the event list
+            if (result.Data.Role == "Organiser")
+            {//start of Organiser landing
+                return RedirectToAction("Dashboard", "Organiser");
+            }//end of Organiser landing
+
             return RedirectToAction("Index", "Home");
 
         }//end of Login (POST)

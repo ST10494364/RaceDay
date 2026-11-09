@@ -1,0 +1,41 @@
+﻿@model List<RaceDay.Web.Models.MyEventRow>
+@{
+    ViewData["Title"] = "My events";
+}
+
+<h2 class="mb-3">My events</h2>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table mb-0 align-middle">
+            <thead>
+                <tr><th>Event</th><th>Date</th><th>Location</th><th>Category</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (r.Event != null)
+                            {
+                                <a asp-controller="Events" asp-action="Details" asp-route-id="@r.Event.EventId">@r.Event.Name</a>
+                            }
+                            else
+                            {
+                                <span>Event #@r.Enrolment.EventId</span>
+                            }
+                        </td>
+                        <td>@(r.Event?.EventDate.ToString("dd MMM yyyy"))</td>
+                        <td>@r.Event?.Location</td>
+                        <td>@r.Enrolment.CategoryName</td>
+                        <td><span class="status-badge status-@r.Enrolment.Status.ToLower()">@r.Enrolment.Status</span></td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="5" class="text-muted">You have not entered any events yet. <a asp-controller="Home" asp-action="Index">Browse events</a></td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+﻿@model List<RaceDay.Web.Models.ResultDto>
+@{
+    ViewData["Title"] = "My results";
+}
+
+@functions {
+    //47 becomes 47th, 1 becomes 1st, 12 becomes 12th
+    private static string Ordinal(int n)
+    {
+        int lastTwo = n % 100;
+        if (lastTwo >= 11 && lastTwo <= 13) return n + "th";
+        return (n % 10) switch { 1 => n + "st", 2 => n + "nd", 3 => n + "rd", _ => n + "th" };
+    }
+}
+
+<h2 class="mb-3">My results</h2>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table mb-0 align-middle">
+            <thead>
+                <tr><th>Event</th><th>Date</th><th>Category</th><th>Finish time</th><th>Position</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        <td>@r.EventName</td>
+                        <td>@r.EventDate.ToString("dd MMM yyyy")</td>
+                        <td>@r.CategoryName</td>
+                        <td><strong>@(r.FinishTime.ToString(@"hh\:mm\:ss"))</strong></td>
+                        <td>@Ordinal(r.FinishingPosition) out of @r.TotalFinishers finishers</td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="5" class="text-muted">No results yet. Your times appear here after the Organiser captures them.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
