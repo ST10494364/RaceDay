@@ -1,22 +1,265 @@
+/* RaceDay theme: deep navy with an energetic orange accent, used on every page */
+
+:root {
+    --rd-navy: #0b1f3a;
+    --rd-navy-light: #16355f;
+    --rd-orange: #ff6b1a;
+    --rd-orange-dark: #e85a0c;
+    --rd-light: #f4f6fa;
+    --rd-green: #1f9d55;
+    --rd-amber: #f5a623;
+    --rd-text: #1c2733;
+}
+
 html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    font-size: 15px;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 70px;
+    background-color: var(--rd-light);
+    color: var(--rd-text);
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+h1, h2, h3, h4 {
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--rd-navy);
+}
+
+/* navigation bar */
+.raceday-navbar {
+    background-color: var(--rd-navy);
+    border-bottom: 4px solid var(--rd-orange);
+}
+
+.raceday-brand {
+    font-weight: 900;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.brand-accent {
+    color: var(--rd-orange);
+}
+
+.raceday-navbar .nav-link {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+    .raceday-navbar .nav-link:hover {
+        color: var(--rd-orange);
+    }
+
+.role-badge {
+    background-color: var(--rd-orange);
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.5px;
+}
+
+/* buttons */
+.btn-primary {
+    background-color: var(--rd-orange);
+    border-color: var(--rd-orange);
+    font-weight: 700;
+}
+
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-primary:active {
+        background-color: var(--rd-orange-dark);
+        border-color: var(--rd-orange-dark);
+    }
+
+.btn-accent {
+    background-color: var(--rd-orange);
+    border-color: var(--rd-orange);
+    color: #fff;
+    font-weight: 700;
+}
+
+    .btn-accent:hover {
+        background-color: var(--rd-orange-dark);
+        border-color: var(--rd-orange-dark);
+        color: #fff;
+    }
+
+.btn-outline-primary {
+    color: var(--rd-navy);
+    border-color: var(--rd-navy);
+    font-weight: 600;
+}
+
+    .btn-outline-primary:hover {
+        background-color: var(--rd-navy);
+        border-color: var(--rd-navy);
+    }
+
+a {
+    color: var(--rd-navy-light);
+}
+
+    a:hover {
+        color: var(--rd-orange-dark);
+    }
+
+/* form fields */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--rd-orange);
+    box-shadow: 0 0 0 0.2rem rgba(255, 107, 26, 0.25);
+}
+
+/* cards */
+.card {
+    border: none;
+    border-radius: 12px;
+}
+
+.card-header {
+    background-color: var(--rd-navy);
+    color: #fff;
+    font-weight: 700;
+    border-top-left-radius: 12px !important;
+    border-top-right-radius: 12px !important;
+}
+
+/* home page banner */
+.hero {
+    background: linear-gradient(135deg, var(--rd-navy) 0%, var(--rd-navy-light) 100%);
+    color: #fff;
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    margin-bottom: 1.5rem;
+    border-left: 8px solid var(--rd-orange);
+}
+
+    .hero h1 {
+        color: #fff;
+        font-weight: 900;
+        text-transform: uppercase;
+    }
+
+    .hero p {
+        color: rgba(255, 255, 255, 0.85);
+        margin-bottom: 0;
+    }
+
+/* event cards and banner images */
+.event-card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+    .event-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(11, 31, 58, 0.18);
+    }
+
+.event-banner {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    background-color: var(--rd-navy-light);
+}
+
+.event-banner-large {
+    width: 100%;
+    max-height: 340px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.banner-placeholder {
+    width: 100%;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--rd-navy), var(--rd-navy-light));
+    color: var(--rd-orange);
+    font-weight: 900;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.profile-picture {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid var(--rd-orange);
+}
+
+/* colour-coded enrolment and event statuses */
+.status-badge {
+    display: inline-block;
+    padding: 0.35em 0.8em;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.status-confirmed {
+    background-color: var(--rd-green);
+}
+
+.status-pending {
+    background-color: var(--rd-amber);
+    color: #3b2a00;
+}
+
+.status-open {
+    background-color: var(--rd-green);
+}
+
+.status-closed {
+    background-color: #8a94a3;
+}
+
+/* dashboard numbers */
+.stat-card .stat-number {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--rd-orange);
+    line-height: 1;
+}
+
+.stat-card .stat-label {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    color: #6b7686;
+}
+
+/* tables */
+.table thead th {
+    background-color: var(--rd-navy);
+    color: #fff;
+    border: none;
+}
+
+/* footer */
+.raceday-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
+    background-color: var(--rd-navy);
+    color: rgba(255, 255, 255, 0.75);
+    text-align: center;
+    font-size: 0.85rem;
 }
