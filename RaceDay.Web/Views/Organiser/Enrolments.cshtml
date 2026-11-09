@@ -1,0 +1,40 @@
+﻿@model RaceDay.Web.Models.EventWorkViewModel
+@{
+    ViewData["Title"] = "Enrolments";
+}
+
+<a asp-action="Events" class="btn btn-outline-primary btn-sm mb-3">&larr; Back to events</a>
+<h2>Enrolments for @Model.Event.Name</h2>
+
+<div class="card shadow-sm mt-3">
+    <div class="table-responsive">
+        <table class="table mb-0 align-middle">
+            <thead>
+                <tr><th>Participant</th><th>Category</th><th>Enrolled on</th><th>Status</th><th></th></tr>
+            </thead>
+            <tbody>
+                @foreach (var en in Model.Enrolments)
+                {
+                    <tr>
+                        <td>@en.ParticipantName</td>
+                        <td>@en.CategoryName</td>
+                        <td>@en.EnrolmentDate.ToString("dd MMM yyyy")</td>
+                        <td><span class="status-badge status-@en.Status.ToLower()">@en.Status</span></td>
+                        <td class="text-end">
+                            @if (en.Status == "Pending")
+                            {
+                                <form asp-action="ConfirmEnrolment" asp-route-id="@Model.Event.EventId" asp-route-enrolmentId="@en.EnrolmentId" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-primary btn-sm">Confirm</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Enrolments.Any())
+                {
+                    <tr><td colspan="5" class="text-muted">Nobody has enrolled for this event yet.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

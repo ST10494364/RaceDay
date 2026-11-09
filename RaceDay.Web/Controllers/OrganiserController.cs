@@ -243,5 +243,160 @@ namespace RaceDay.Web.Controllers
 
         }//end of Delete
 
+        //the event with this id, but only if it belongs to the logged-in Organiser (otherwise null)
+        private async Task<EventDto?> LoadOwnedEventAsync(int id)
+        {//start of LoadOwnedEventAsync
+
+            int userId = HttpContext.Session.GetInt32("UserId")!.Value;
+            var result = await _api.GetAsync<EventDto>($"api/events/{id}");
+
+            if (!result.Success || result.Data == null || result.Data.OrganiserId != userId)
+            {//start of not found or not owner check
+                TempData["Problem"] = "That event could not be found among your events.";
+                return null;
+            }//end of not found or not owner check
+
+            return result.Data;
+
+        }//end of LoadOwnedEventAsync
+
+        //the categories of an event, and a form to add one
+        public async Task<IActionResult> Categories(int id)
+        {//start of Categories
+
+            var guard = RequireOrganiser();
+            if (guard != null) return guard;
+
+            var ev = await LoadOwnedEventAsync(id);
+            if (ev == null) return RedirectToAction("Events");
+
+            var categories = await _api.GetAsync<List<CategoryDto>>($"api/events/{id}/categories");
+            return View(new EventWorkViewModel { Event = ev, Categories = categories.Data ?? new List<CategoryDto>() });
+
+        }//end of Categories
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddCategory(int id, string categoryName)
+        {//start of AddCategory
+
+            var guard = RequireOrganiser();
+            if (guard != null) return guard;
+
+            if (string.IsNullOrWhiteSpace(categoryName))
+            {//start of empty name check
+                TempData["Problem"] = "Please enter a category name, for example 10 km or Under 18.";
+                return RedirectToAction("Categories", new { id });
+            }//end of empty name check
+
+            var result = await _api.PostAsync<CategoryDto>($"api/events/{id}/categories", new { category_name = categoryName.Trim() });
+
+            if (result.Success)
+            {//start of success branch
+                TempData["Notice"] = "Category added.";
+            }//end of success branch
+            else
+            {//start of failure branch
+                TempData["Problem"] = result.Message;
+            }//end of failure branch
+
+            return RedirectToAction("Categories", new { id });
+
+        }//end of AddCategory
+
+        //everyone who has enrolled for an event, with their category and status
+        public async Task<IActionResult> Enrolments(int id)
+        {//start of Enrolments
+
+            var guard = RequireOrganiser();
+            if (guard != null) return guard;
+
+            var ev = await LoadOwnedEventAsync(id);
+            if (ev == null) return RedirectToAction("Events");
+
+            var enrolments = await _api.GetAsync<List<EnrolmentDto>>($"api/events/{id}/enrolments");
+            return View(new EventWorkViewModel { Event = ev, Enrolments = enrolments.Data ?? new List<EnrolmentDto>() });
+
+        }//end of Enrolments
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmEnrolment(int id, int enrolmentId)
+        {//start of ConfirmEnrolment
+
+            var guard = RequireOrganiser();
+            if (guard != null) return guard;
+
+            var result = await _api.PutAsync<EnrolmentDto>($"api/events/{id}/enrolments/{enrolmentId}/confirm", null);
+
+            if (result.Success)
+            {//start of success branch
+                TempData["Notice"] = "Enrolment confirmed.";
+            }//end of success branch
+            else
+            {//start of failure branch
+                TempData["Problem"] = result.Message;
+            }//end of failure branch
+
+            return RedirectToAction("Enrolments", new { id });
+
+        }//end of ConfirmEnrolment
+
+        //the results entry page: one row per enrolled Participant
+        public async Task<IActionResult> Results(int id)
+        {//start of Results
+
+            var guard = RequireOrganiser();
+            if (guard != null) return guard;
+
+            var ev = await LoadOwnedEventAsync(id);
+            if (ev == null) return RedirectToAction("Events");
+
+            var enrolments = await _api.GetAsync<List<EnrolmentDto>>($"api/events/{id}/enrolments");
+            return View(new EventWorkViewModel { Event = ev, Enrolments = enrolments.Data ?? new List<EnrolmentDto>() });
+
+        }//end of Results
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveResult(int id, int participantId, string finishTime, int position)
+        {//start of SaveResult
+
+            var guard = RequireOrganiser();
+            if (guard != null) return guard;
+
+            if (!TimeSpan.TryParse(finishTime, out TimeSpan time) || time <= TimeSpan.Zero)
+            {//start of time check
+                TempData["Problem"] = "Please enter the finish time as hours:minutes:seconds, for example 00:52:30.";
+                return RedirectToAction("Results", new { id });
+            }//end of time check
+
+            if (position < 1)
+            {//start of position check
+                TempData["Problem"] = "The finishing position must be 1 or higher.";
+                return RedirectToAction("Results", new { id });
+            }//end of position check
+
+            var result = await _api.PostAsync<object>($"api/events/{id}/results", new
+            {
+                participant_id = participantId,
+                finish_time = time.ToString(@"hh\:mm\:ss"),
+                finishing_position = position
+            });
+
+            if (result.Success)
+            {//start of success branch
+                TempData["Notice"] = "Result saved.";
+            }//end of success branch
+            else
+            {//start of failure branch
+                TempData["Problem"] = result.Message;
+            }//end of failure branch
+
+            return RedirectToAction("Results", new { id });
+
+        }//end of SaveResult
+
+
     }//end of class
 }//end of namespace

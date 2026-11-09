@@ -62,4 +62,14 @@ namespace RaceDay.Web.Models
         public IFormFile? Banner { get; set; }
 
     }//end of class
+
+    //one event with its categories and enrolments, used by the Categories, Enrolments and Results pages
+    public class EventWorkViewModel
+    {//start of class
+
+        public EventDto Event { get; set; } = new EventDto();
+        public List<CategoryDto> Categories { get; set; } = new List<CategoryDto>();
+        public List<EnrolmentDto> Enrolments { get; set; } = new List<EnrolmentDto>();
+
+    }//end of class
 }//end of namespace

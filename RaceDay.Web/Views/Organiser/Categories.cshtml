@@ -1,0 +1,39 @@
+﻿@model RaceDay.Web.Models.EventWorkViewModel
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<a asp-action="Events" class="btn btn-outline-primary btn-sm mb-3">&larr; Back to events</a>
+<h2>Categories for @Model.Event.Name</h2>
+
+<div class="row g-4 mt-1">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header">Current categories</div>
+            <ul class="list-group list-group-flush">
+                @foreach (var c in Model.Categories)
+                {
+                    <li class="list-group-item">@c.CategoryName</li>
+                }
+                @if (!Model.Categories.Any())
+                {
+                    <li class="list-group-item text-muted">No categories yet.</li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header">Add a category</div>
+            <div class="card-body">
+                <form asp-action="AddCategory" asp-route-id="@Model.Event.EventId" method="post">
+                    <div class="mb-3">
+                        <label class="form-label" for="categoryName">Category name</label>
+                        <input class="form-control" id="categoryName" name="categoryName" maxlength="100" placeholder="e.g. 10 km or Under 18" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add category</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

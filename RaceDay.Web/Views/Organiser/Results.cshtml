@@ -1,0 +1,39 @@
+﻿@model RaceDay.Web.Models.EventWorkViewModel
+@{
+    ViewData["Title"] = "Results";
+}
+
+<a asp-action="Events" class="btn btn-outline-primary btn-sm mb-3">&larr; Back to events</a>
+<h2>Results for @Model.Event.Name</h2>
+<p class="text-muted">Enter each finisher's time (hours:minutes:seconds) and finishing position after the event.</p>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table mb-0 align-middle">
+            <thead>
+                <tr><th>Participant</th><th>Category</th><th>Capture result</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var en in Model.Enrolments)
+                {
+                    <tr>
+                        <td>@en.ParticipantName</td>
+                        <td>@en.CategoryName</td>
+                        <td>
+                            <form asp-action="SaveResult" asp-route-id="@Model.Event.EventId" method="post" class="d-flex gap-2">
+                                <input type="hidden" name="participantId" value="@en.ParticipantId" />
+                                <input class="form-control form-control-sm" name="finishTime" placeholder="00:52:30" style="max-width:120px" />
+                                <input class="form-control form-control-sm" type="number" min="1" name="position" placeholder="Position" style="max-width:100px" />
+                                <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Enrolments.Any())
+                {
+                    <tr><td colspan="3" class="text-muted">Nobody has enrolled for this event yet.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
