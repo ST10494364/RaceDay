@@ -1,8 +1,59 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model RaceDay.Web.Models.HomeViewModel
+@{
+    ViewData["Title"] = "Upcoming events";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="hero">
+    <h1>Find your next race</h1>
+    <p>Browse upcoming road running, walking and cycling events across South Africa.</p>
+</div>
+
+<form method="get" asp-action="Index" class="row g-2 mb-4">
+    <div class="col-md-5">
+        <input type="text" name="search" value="@Model.Search" class="form-control" placeholder="Search by name or location" />
+    </div>
+    <div class="col-md-4">
+        <select name="type" class="form-select">
+            <option value="">All event types</option>
+            @foreach (var t in new[] { "Run", "Walk", "Cycle" })
+            {
+                <option value="@t" selected="@(Model.Type == t)">@t</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3 d-grid">
+        <button class="btn btn-primary" type="submit">Filter</button>
+    </div>
+</form>
+
+@if (!Model.Events.Any())
+{
+    <div class="alert alert-info">No upcoming events match your search.</div>
+}
+
+<div class="row g-4">
+    @foreach (var e in Model.Events)
+    {
+        <div class="col-md-6 col-lg-4">
+            <div class="card event-card h-100 shadow-sm">
+                @if (!string.IsNullOrEmpty(e.BannerImageUrl))
+                {
+                    <img class="event-banner" src="@Url.Action("EventBanner", "Images", new { id = e.EventId })" alt="Banner for @e.Name" />
+                }
+                else
+                {
+                    <div class="banner-placeholder">@e.EventTypeName</div>
+                }
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="mb-0">@e.Name</h5>
+                        <span class="status-badge @(e.Status == "Open" ? "status-open" : "status-closed")">@e.Status</span>
+                    </div>
+                    <p class="mb-1 text-muted">@e.EventDate.ToString("dd MMM yyyy") &middot; @e.Location</p>
+                    <p class="mb-3"><strong>@e.DistanceKm km</strong> &middot; @e.EventTypeName</p>
+                    <a class="btn btn-primary btn-sm" asp-controller="Events" asp-action="Details" asp-route-id="@e.EventId">View details</a>
+                </div>
+            </div>
+        </div>
+    }
 </div>
