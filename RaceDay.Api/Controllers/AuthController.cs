@@ -101,7 +101,8 @@ namespace RaceDay.Api.Controllers
                 UserId = user.UserId,
                 FullName = user.FullName,
                 Email = user.Email,
-                Role = user.Role
+                Role = user.Role,
+                ProfilePictureUrl = user.ProfilePictureUrl
             };//end of response object
         }//end of ToResponse
 

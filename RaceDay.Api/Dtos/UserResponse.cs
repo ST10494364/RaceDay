@@ -19,5 +19,9 @@ namespace RaceDay.Api.Dtos
         [JsonPropertyName("role")]
         public string Role { get; set; } = string.Empty;
 
+        //Azure address of the profile picture (empty when the user has not uploaded one)
+        [JsonPropertyName("profile_picture_url")]
+        public string? ProfilePictureUrl { get; set; }
+
     }//end of class
 }//end of namespace
