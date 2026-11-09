@@ -1,0 +1,62 @@
+﻿@model RaceDay.Web.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Organiser dashboard";
+}
+
+<div class="hero">
+    <h1>Organiser dashboard</h1>
+    <p>Your events, enrolments and upcoming dates at a glance.</p>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card stat-card shadow-sm">
+            <div class="card-body">
+                <div class="stat-number">@Model.TotalEvents</div><div class="stat-label">Events created</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card shadow-sm">
+            <div class="card-body">
+                <div class="stat-number">@Model.UpcomingEvents</div><div class="stat-label">Upcoming events</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card shadow-sm">
+            <div class="card-body">
+                <div class="stat-number">@Model.TotalEnrolments</div><div class="stat-label">Total enrolments</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header">Enrolments per event</div>
+    <div class="table-responsive">
+        <table class="table mb-0 align-middle">
+            <thead>
+                <tr><th>Event</th><th>Date</th><th>Status</th><th>Enrolments</th><th></th></tr>
+            </thead>
+            <tbody>
+                @foreach (var row in Model.Rows)
+                {
+                    <tr>
+                        <td>@row.Event.Name</td>
+                        <td>@row.Event.EventDate.ToString("dd MMM yyyy")</td>
+                        <td><span class="status-badge @(row.Event.Status == "Open" ? "status-open" : "status-closed")">@row.Event.Status</span></td>
+                        <td><strong>@row.TotalEnrolments</strong></td>
+                        <td class="text-end"><a class="btn btn-outline-primary btn-sm" asp-action="Enrolments" asp-route-id="@row.Event.EventId">View enrolments</a></td>
+                    </tr>
+                }
+                @if (!Model.Rows.Any())
+                {
+                    <tr><td colspan="5" class="text-muted">You have not created any events yet.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<a class="btn btn-primary mt-3" asp-action="Create">Create a new event</a>

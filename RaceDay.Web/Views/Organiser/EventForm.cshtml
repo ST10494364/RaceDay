@@ -1,0 +1,94 @@
+﻿@model RaceDay.Web.Models.EventFormViewModel
+@{
+    ViewData["Title"] = Model.IsEdit ? "Edit event" : "Create event";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+
+                <h2 class="mb-3">@ViewData["Title"]</h2>
+
+                <form asp-action="@(Model.IsEdit ? "Edit" : "Create")" method="post" enctype="multipart/form-data" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+                    <input type="hidden" asp-for="EventId" />
+                    <input type="hidden" asp-for="IsEdit" />
+                    <input type="hidden" asp-for="HasBanner" />
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label"></label>
+                        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="EventDate" class="form-label"></label>
+                            <input asp-for="EventDate" type="date" class="form-control" />
+                            <span asp-validation-for="EventDate" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Location" class="form-label"></label>
+                            <input asp-for="Location" class="form-control" />
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="DistanceKm" class="form-label"></label>
+                            <input asp-for="DistanceKm" class="form-control" />
+                            <span asp-validation-for="DistanceKm" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="EventTypeId" class="form-label"></label>
+                            <select asp-for="EventTypeId" class="form-select">
+                                <option value="1">Run</option>
+                                <option value="2">Walk</option>
+                                <option value="3">Cycle</option>
+                            </select>
+                            <span asp-validation-for="EventTypeId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    @if (Model.IsEdit)
+                    {
+                        <div class="mb-3">
+                            <label asp-for="Status" class="form-label"></label>
+                            <select asp-for="Status" class="form-select">
+                                <option value="Open">Open</option>
+                                <option value="Closed">Closed</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                    }
+
+                    <div class="mb-4">
+                        <label asp-for="Banner" class="form-label"></label>
+                        @if (Model.IsEdit && Model.HasBanner)
+                        {
+                            <div class="mb-2">
+                                <img class="event-banner-large" style="max-height:160px" src="@Url.Action("EventBanner", "Images", new { id = Model.EventId })" alt="Current banner" />
+                                <div class="small text-muted">Choose a new image below to replace this one.</div>
+                            </div>
+                        }
+                        <input asp-for="Banner" type="file" class="form-control" accept="image/png,image/jpeg,image/webp" />
+                        <div class="form-text">JPG, PNG or WEBP, up to 5 MB.</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">@(Model.IsEdit ? "Save changes" : "Create event")</button>
+                    <a asp-action="Events" class="btn btn-outline-primary ms-2">Cancel</a>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
