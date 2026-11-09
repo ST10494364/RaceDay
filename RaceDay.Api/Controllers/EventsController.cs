@@ -237,7 +237,8 @@ namespace RaceDay.Api.Controllers
                 EventDate = e.EventDate,
                 Location = e.Location,
                 DistanceKm = e.DistanceKm,
-                Status = e.Status
+                Status = e.Status,
+                BannerImageUrl = e.BannerImageUrl
             };//end of response object
         }//end of ToResponse
 

@@ -37,5 +37,9 @@ namespace RaceDay.Api.Dtos
         [JsonPropertyName("status")]
         public string Status { get; set; } = string.Empty;
 
+        //Azure address of the banner image (empty when the event has no banner)
+        [JsonPropertyName("banner_image_url")]
+        public string? BannerImageUrl { get; set; }
+
     }//end of class
 }//end of namespace
