@@ -5,6 +5,7 @@ on:
     branches: [ main, part-3-mvc ]
   pull_request:
     branches: [ main, part-3-mvc ]
+
 jobs:
   build-and-test:
     runs-on: ubuntu-24.04
@@ -18,6 +19,7 @@ jobs:
           test -d docs
           test -f RaceDay.Api/RaceDay.Api.csproj
           test -f RaceDay.Api.Tests/RaceDay.Api.Tests.csproj
+          test -f RaceDay.Web/RaceDay.Web.csproj
 
       - name: Set up .NET 8
         uses: actions/setup-dotnet@v4
@@ -32,3 +34,6 @@ jobs:
 
       - name: Run unit tests
         run: dotnet test RaceDay.Api.Tests/RaceDay.Api.Tests.csproj --no-build --configuration Release --verbosity normal
+
+      - name: Build MVC project
+        run: dotnet build RaceDay.Web/RaceDay.Web.csproj --configuration Release
