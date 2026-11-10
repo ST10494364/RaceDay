@@ -218,7 +218,7 @@ The workflow `.github/workflows/ci.yml` runs on every push to `main` and `part-3
 
 An unlisted YouTube video demonstrating the running application, the MVC structure, the Blob Storage integration and the Docker setup:
 
-VIDEO_LINK_HERE
+(https://youtu.be/8ehLo2u0sRw)
 
 ## AI Assistance Disclosure
 
