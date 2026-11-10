@@ -213,8 +213,7 @@ The workflow `.github/workflows/ci.yml` runs on every push to `main` and `part-3
 
 **Latest build status:**
 
-![Part 3 CI/CD successful build](docs/part3-ci-green-build.png)
-
+![Part 3 CI/CD successful build](docs/CI-PART3.png)
 ### Part 3 Video Walkthrough
 
 An unlisted YouTube video demonstrating the running application, the MVC structure, the Blob Storage integration and the Docker setup:
